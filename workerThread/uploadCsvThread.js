@@ -1,4 +1,17 @@
 const dbo = require('../database');
+const fs = require('fs');
+const csv = require('fast-csv');
+const { workerData, parentPort } = require('worker_threads');
+
+const convertCsvToJson = path =>
+  new Promise((resolve, reject) => {
+    let dataSet = [];
+    fs.createReadStream(path)
+      .pipe(csv.parse({ headers: true }))
+      .on('error', reject)
+      .on('data', row => dataSet.push(row))
+      .on('end', () => resolve(dataSet));
+  });
 
 const groupBy = (data, key) => Array.from(data.reduce((entryMap, e) => entryMap.set(e[key], { ...(entryMap.get(e[key]) || {}), ...e }), new Map()).values());
 
@@ -70,4 +83,14 @@ const dynamicInsert = async insures => {
   return policyInfoData;
 };
 
-module.exports = dynamicInsert;
+dbo.connectToServer(async err => {
+  if (err) {
+    console.error(err);
+    process.exit();
+  }
+  console.log('Worker thread started');
+  const insures = await convertCsvToJson(workerData.path);
+  const results = await dynamicInsert(insures);
+  console.log('Worker thread finished');
+  parentPort.postMessage({ results });
+});
