@@ -1,5 +1,5 @@
 {
-  "name": "insure-demine",
+  "name": "insured-mine",
   "version": "1.0.0",
   "description": "Proxy server to hide public API keys with rate limiting, caching",
   "main": "index.js",
