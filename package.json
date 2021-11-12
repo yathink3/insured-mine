@@ -1,0 +1,22 @@
+{
+  "name": "insure-demine",
+  "version": "1.0.0",
+  "description": "Proxy server to hide public API keys with rate limiting, caching",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "node-dev index"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-rate-limit": "^5.5.0",
+    "fast-csv": "^4.3.6",
+    "mongodb": "^4.1.4",
+    "multer": "^1.4.3"
+  },
+  "devDependencies": {
+    "node-dev": "^7.1.0"
+  }
+}
