@@ -15,7 +15,6 @@ const convertCsvToJson = path =>
   });
 
 const upload = async (req, res) => {
-  const dbConnect = dbo.getDb().collection('insurence-data');
   const path = __dirname + '/../resources/uploads/' + req.file.filename;
   try {
     if (req.file == undefined) return res.status(400).send('Please upload a CSV file!');
@@ -30,7 +29,7 @@ const upload = async (req, res) => {
 };
 
 const getInsures = async (req, res) => {
-  const dbConnect = dbo.getDb().collection('insurence-data');
+  const dbConnect = dbo.getDb().collection('PolicyInfo');
   try {
     const result = await dbConnect.find({}).limit(50).toArray();
     return res.send(result);
@@ -41,15 +40,71 @@ const getInsures = async (req, res) => {
 
 const searchInsures = async (req, res) => {
   const { userName } = req.body;
-  const dbConnect = dbo.getDb().collection('insurence-data');
+
   try {
-    const query = { firstname: { $regex: userName } };
-    const result = await dbConnect.find(query).limit(50).toArray();
-    if (result.length === 0) return res.status(404).send({ message: 'No insures found with the given name.' });
-    else return res.status(200).send({ message: `Results Found for '${userName}'`, data: result });
+    const query = [
+      { $match: { first_name: { $regex: userName } } },
+      {
+        $lookup: {
+          from: 'PolicyInfo',
+          localField: '_id',
+          foreignField: 'user_id',
+          as: 'PolicyInfo',
+        },
+      },
+      {
+        $lookup: {
+          from: 'Agent',
+          localField: 'PolicyInfo.agent_id',
+          foreignField: '_id',
+          as: 'AgentData',
+        },
+      },
+      {
+        $project: {
+          'PolicyInfo.user_id': 0,
+          'PolicyInfo.agent_id': 0,
+          'PolicyInfo.account_id': 0,
+          'PolicyInfo.policy_category_id': 0,
+          'PolicyInfo.policy_carrier_id': 0,
+        },
+      },
+    ];
+    const result = await dbo.getDb().collection('User').aggregate(query).limit(50).toArray();
+    return res.status(200).send({ message: `Results Found for '${userName}'`, data: result });
   } catch (error) {
     return res.status(500).send({ message: 'Failed to fetch data in database!', error: error.message });
   }
 };
 
 module.exports = { upload, getInsures, searchInsures };
+
+// db.somecollection.aggregate([{
+//   $lookup: {
+//       from: "campaigns",
+//       localField: "campId",
+//       foreignField: "_id",
+//       as: "campaign"
+//   }
+// }, {
+//   $unwind: "$campaign"
+// }, {
+//   $lookup: {
+//       from: "entities",
+//       let: {clientid: '$campaign.clientid'},
+//       pipeline: [
+//          { '$match':
+//            { '$expr':
+//              {
+//                 '$eq': ['$_id', '$$clientid']
+//              }
+//            }
+//          },
+//          { '$project':
+//             '_id': 1,
+//             'username': 1
+//          }
+//       ]
+//       as: "campaign.client"
+//   }
+// }]);
