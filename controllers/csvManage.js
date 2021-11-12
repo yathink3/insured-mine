@@ -1,6 +1,8 @@
 const dbo = require('../database');
 const fs = require('fs');
 const csv = require('fast-csv');
+const dynamicInsert = require('../model/insureModeling');
+const dynamicInsertGroupBy = require('../model/insureModelingGroupBy');
 
 const convertCsvToJson = path =>
   new Promise((resolve, reject) => {
@@ -12,15 +14,14 @@ const convertCsvToJson = path =>
       .on('end', () => resolve(dataSet));
   });
 
-const dynamicCollectionCreate = () => {};
-
 const upload = async (req, res) => {
   const dbConnect = dbo.getDb().collection('insurence-data');
   const path = __dirname + '/../resources/uploads/' + req.file.filename;
   try {
     if (req.file == undefined) return res.status(400).send('Please upload a CSV file!');
     const insures = await convertCsvToJson(path);
-    await dbConnect.insertMany(insures);
+    // await dynamicInsert(insures);
+    await dynamicInsertGroupBy(insures);
     return res.status(200).send({ message: 'Uploaded the file successfully: ' + req.file.originalname });
   } catch (error) {
     console.log(error);
