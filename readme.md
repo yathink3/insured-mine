@@ -12,7 +12,7 @@ npm install
 npm run server
 ```
 
-### Pm2 montoring
+### Pm2 monitoring
 
 ```bash
 npm run monitor
