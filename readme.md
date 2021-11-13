@@ -9,8 +9,16 @@ npm install
 ### Run on http://localhost:5000
 
 ```bash
-npm run dev
+npm run monitor
 ```
 
-### Add public API info
+### Pm2 montoring
+
+```bash
+ npm run status
+ npm run logs-server
+ npm logs-monitor
+ npm run kill
+ npm run monit
+ ```
 
