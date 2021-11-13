@@ -1,0 +1,90 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "insured-mine",
+  "dateExported": "2021-11-13T08:49:21.108Z",
+  "version": "1.1",
+  "folders": [],
+  "requests": [
+    {
+      "containerId": "",
+      "sortNum": 10000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.io)" },
+        { "name": "Content-disposition", "value": "attachment; filename=new_file.csv", "isDisabled": true },
+        { "name": "Content-Type", "value": "text/csv", "isDisabled": true }
+      ],
+      "colId": "4bc16574-0988-450a-96e8-983e531ce151",
+      "name": "http://localhost:5000/api/upload",
+      "url": "http://localhost:5000/api/upload",
+      "method": "POST",
+      "modified": "2021-11-12T04:00:40.451Z",
+      "created": "2021-11-11T18:12:04.770Z",
+      "_id": "4ee960a7-a1b9-4f4f-97bb-d5df49a3e08d",
+      "params": [],
+      "body": {
+        "type": "formdata",
+        "raw": "",
+        "form": [],
+        "files": [
+          { "name": "file", "value": "C:\\Users\\yathi\\Downloads\\data-sheet.csv" },
+          { "name": "file", "value": "C:\\Users\\yathi\\Downloads\\data-sheet-new.csv", "isDisabled": true }
+        ]
+      },
+      "tests": []
+    },
+    {
+      "containerId": "",
+      "sortNum": 20000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.io)" }
+      ],
+      "colId": "4bc16574-0988-450a-96e8-983e531ce151",
+      "name": "http://localhost:5000/api/search",
+      "url": "http://localhost:5000/api/search",
+      "method": "POST",
+      "modified": "2021-11-12T14:31:01.960Z",
+      "created": "2021-11-11T19:20:20.007Z",
+      "_id": "93f62b91-59c9-4a32-bd34-78062cda1437",
+      "params": [],
+      "body": { "type": "json", "raw": "{\n    \"userName\":\"Lura Lucca\"\n}", "form": [] },
+      "tests": []
+    },
+    {
+      "containerId": "",
+      "sortNum": 30000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.io)" }
+      ],
+      "colId": "4bc16574-0988-450a-96e8-983e531ce151",
+      "name": "http://localhost:5000/api/getData",
+      "url": "http://localhost:5000/api/getData",
+      "method": "GET",
+      "modified": "2021-11-12T04:01:08.583Z",
+      "created": "2021-11-11T18:07:49.627Z",
+      "_id": "5d0215a2-7b52-4a90-84c0-3255698f21b9",
+      "params": [],
+      "tests": []
+    },
+    {
+      "containerId": "",
+      "sortNum": 40000,
+      "headers": [
+        { "name": "Accept", "value": "*/*" },
+        { "name": "User-Agent", "value": "Thunder Client (https://www.thunderclient.io)" }
+      ],
+      "colId": "4bc16574-0988-450a-96e8-983e531ce151",
+      "name": "localhost:5000/api/schedule",
+      "url": "localhost:5000/api/schedule",
+      "method": "POST",
+      "modified": "2021-11-13T08:40:35.147Z",
+      "created": "2021-11-12T19:21:30.206Z",
+      "_id": "15c4acac-7591-4d65-b461-fc82980fdccb",
+      "params": [],
+      "body": { "type": "json", "raw": "{\n    \"message\":\"recent pure iihbk\",\n    \"day\":\"2021-11-13\",\n    \"time\":\"14:12\"\n}", "form": [] },
+      "tests": []
+    }
+  ]
+}
