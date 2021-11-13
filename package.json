@@ -5,9 +5,10 @@
   "main": "server.js",
   "scripts": {
     "dev": "node-dev server",
+    "server": "pm2 start server.js",
+    "logs-server": "pm2 logs server",
     "status": "pm2 status",
     "monitor": "pm2 start monitor.js",
-    "logs-server": "pm2 logs server",
     "logs-monitor": "pm2 logs monitor",
     "kill": "pm2 kill",
     "monit": "pm2 monit"
