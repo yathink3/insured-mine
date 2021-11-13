@@ -1,8 +1,5 @@
 const errorHandler = (err, req, res, next) => {
-  console.log(123);
-  if (res.headersSent) {
-    return next(err);
-  }
+  if (res.headersSent) return next(err);
 
   res.status(500).json({
     success: false,
