@@ -18,7 +18,7 @@ npm run server
 npm run monitor
 npm run status
 npm run logs-server
-npm logs-monitor
+npm run logs-monitor
 npm run kill
 npm run monit
 ```
