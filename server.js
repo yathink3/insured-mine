@@ -30,10 +30,7 @@ app.use(errorHandler);
 
 //mongodb connection
 dbo.connectToServer(err => {
-  if (err) {
-    console.error(err);
-    process.exit();
-  }
+  if (err) console.error(err), process.exit();
   // start the Express server
   app.listen(PORT, () => {
     console.log(`Server is running on port: ${PORT}`);
