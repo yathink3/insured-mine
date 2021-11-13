@@ -1,11 +1,12 @@
 {
   "name": "insured-mine",
   "version": "1.0.0",
-  "description": "Proxy server to hide public API keys with rate limiting, caching",
+  "description": "insured-mine project",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "node-dev index"
+    "dev": "node-dev index",
+    "server": "pm2 start index",
+    "monit": "pm2 monit"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -14,7 +15,8 @@
     "express-rate-limit": "^5.5.0",
     "fast-csv": "^4.3.6",
     "mongodb": "^4.1.4",
-    "multer": "^1.4.3"
+    "multer": "^1.4.3",
+    "pm2": "^5.1.2"
   },
   "devDependencies": {
     "node-dev": "^7.1.0"
