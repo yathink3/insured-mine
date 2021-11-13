@@ -1,12 +1,28 @@
 const dbo = require('../database');
 const worker = require('../workerThread/workerService');
+const fs = require('fs');
+const csv = require('fast-csv');
+
+const convertCsvToJson = path =>
+  new Promise((resolve, reject) => {
+    let dataSet = [];
+    fs.createReadStream(path)
+      .pipe(csv.parse({ headers: true }))
+      .on('error', reject)
+      .on('data', row => dataSet.push(row))
+      .on('end', () => {
+        fs.unlinkSync(path);
+        resolve(dataSet);
+      });
+  });
 
 const upload = async (req, res) => {
   const path = __dirname + '/../resources/uploads/' + req.file.filename;
   try {
     if (req.file == undefined) return res.status(400).send('Please upload a CSV file!');
-    await worker('./workerThread/uploadCsvThread.js', { workerData: { path } });
-    return res.status(200).send({ message: 'Uploaded file successfully: ' + req.file.originalname });
+    const data = await convertCsvToJson(path);
+    const { results } = await worker('./workerThread/uploadCsvThread.js', { workerData: { data } });
+    return res.status(200).send({ message: results.message + ' from ' + req.file.originalname });
   } catch (error) {
     console.log(error);
     return res.status(500).send({ message: 'Fail to import data into database!', error: error.message });
@@ -32,7 +48,6 @@ const getInsures = async (req, res) => {
 
 const searchInsures = async (req, res) => {
   const { userName } = req.body;
-
   try {
     const query = [
       { $match: { first_name: { $regex: userName } } },
