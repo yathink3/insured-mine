@@ -77,10 +77,7 @@ const dynamicInsert = async insures => {
 };
 
 dbo.connectToServer(async err => {
-  if (err) {
-    console.error(err);
-    process.exit();
-  }
+  if (err) console.error(err), process.exit();
   const insures = workerData.data;
   const results = await dynamicInsert(insures);
   parentPort.postMessage({ results });

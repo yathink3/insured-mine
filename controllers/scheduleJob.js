@@ -8,9 +8,7 @@ const checkSchedulerForTask = async () => {
   let data = await Scheduler.findOne({ executeOn: { $lte: new Date() } });
   console.log('checkSchedulerForTask', new Date(), data);
   if (!data) {
-    timer = setTimeout(() => {
-      checkSchedulerForTask();
-    }, 2000);
+    timer = setTimeout(() => checkSchedulerForTask(), 2000);
     return;
   } else {
     switch (data.taskType) {

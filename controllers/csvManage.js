@@ -3,24 +3,21 @@ const worker = require('../workerThread/workerService');
 const fs = require('fs');
 const csv = require('fast-csv');
 
-const convertCsvToJson = path =>
+const convertCsvToJson = filename =>
   new Promise((resolve, reject) => {
+    const path = __dirname + '/../resources/uploads/' + filename;
     let dataSet = [];
     fs.createReadStream(path)
       .pipe(csv.parse({ headers: true }))
       .on('error', reject)
       .on('data', row => dataSet.push(row))
-      .on('end', () => {
-        fs.unlinkSync(path);
-        resolve(dataSet);
-      });
+      .on('end', () => (fs.unlinkSync(path), resolve(dataSet)));
   });
 
 const upload = async (req, res) => {
-  const path = __dirname + '/../resources/uploads/' + req.file.filename;
   try {
     if (req.file == undefined) return res.status(400).send('Please upload a CSV file!');
-    const data = await convertCsvToJson(path);
+    const data = await convertCsvToJson(req.file.filename);
     const { results } = await worker('./workerThread/uploadCsvThread.js', { workerData: { data } });
     return res.status(200).send({ message: results.message + ' from ' + req.file.originalname });
   } catch (error) {
