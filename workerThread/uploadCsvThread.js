@@ -1,5 +1,18 @@
 const dbo = require('../database');
-const { workerData, parentPort } = require('worker_threads');
+const { Worker, isMainThread, workerData, parentPort } = require('worker_threads');
+const fs = require('fs');
+const csv = require('fast-csv');
+
+const convertCsvToJson = filename =>
+  new Promise((resolve, reject) => {
+    const path = __dirname + '/../resources/uploads/' + filename;
+    let dataSet = [];
+    fs.createReadStream(path)
+      .pipe(csv.parse({ headers: true }))
+      .on('error', reject)
+      .on('data', row => dataSet.push(row))
+      .on('end', () => (fs.unlinkSync(path), resolve(dataSet)));
+  });
 
 const groupBy = (data, key) => Array.from(data.reduce((entryMap, e) => entryMap.set(e[key], { ...(entryMap.get(e[key]) || {}), ...e }), new Map()).values());
 
@@ -76,9 +89,29 @@ const dynamicInsert = async insures => {
   return { message: `No New Data inserted` };
 };
 
-dbo.connectToServer(async err => {
-  if (err) console.error(err), process.exit();
-  const insures = workerData.data;
-  const results = await dynamicInsert(insures);
-  parentPort.postMessage({ results });
-});
+const worker = data => {
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(__filename, { workerData: { data } });
+    worker.on('message', resolve);
+    worker.on('error', reject);
+    worker.on('exit', code => {
+      if (code !== 0) reject(new Error(`Worker stopped with exit code ${code}`));
+    });
+  });
+};
+
+const runScirpt = async () => {
+  const filename = workerData.data;
+  const insures = await convertCsvToJson(filename);
+  dbo.connectToServer(async err => {
+    if (err) console.error(err), process.exit();
+    const results = await dynamicInsert(insures);
+    parentPort.postMessage({ results });
+  });
+};
+
+if (isMainThread) {
+  module.exports = worker;
+} else {
+  runScirpt();
+}
